@@ -1,0 +1,79 @@
+.cbr-admin-wrap h1 .dashicons { vertical-align: middle; margin-right: 8px; }
+.cbr-admin-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin: 20px 0; }
+.cbr-card { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+.cbr-card h3 { margin-top: 0; font-size: 16px; }
+.cbr-stat { font-size: 36px; font-weight: 700; color: #2c5f2d; margin: 10px 0 0; }
+.cbr-card code { background: #f0f0f0; padding: 4px 10px; border-radius: 4px; font-size: 14px; }
+.cbr-settings-grid { display: block; margin-top: 0; }
+
+/* ---- Colors card: theme palette, swatches, live preview ---- */
+.cbr-theme-palette { background: #f6f7f7; border: 1px solid #dcdcde; border-radius: 6px; padding: 12px 14px; margin: 8px 0 4px; }
+.cbr-palette-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+.cbr-palette-head .button { margin-left: auto; }
+.cbr-swatches { display: flex; flex-wrap: wrap; gap: 6px; }
+.cbr-swatch { width: 34px; height: 34px; border-radius: 6px; border: 2px solid #fff; box-shadow: 0 0 0 1px #c3c4c7; cursor: pointer; padding: 0; transition: transform .1s; }
+.cbr-swatch:hover { transform: scale(1.08); }
+.cbr-swatch.is-selected { box-shadow: 0 0 0 2px #2271b1, 0 0 0 4px #fff; }
+body.cbr-swatch-armed .wp-color-result { cursor: copy; outline: 2px dashed #2271b1; outline-offset: 2px; }
+
+.cbr-preview { --cbr-primary:#2c5f2d; --cbr-secondary:#97bc62; --cbr-accent:#d4a574; --cbr-bg:#faf8f5; --cbr-text:#2d2926;
+  max-width: 100%; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.1); background: var(--cbr-bg); color: var(--cbr-text); font-family: Georgia, serif; }
+.cbr-preview-toolbar { background: var(--cbr-primary); color: #fff; padding: 9px 12px; display: flex; gap: 8px; font-size: 12px; font-family: -apple-system, Arial, sans-serif; }
+.cbr-preview-toolbar span { background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22); border-radius: 4px; padding: 3px 8px; }
+.cbr-preview-body { padding: 14px 16px 16px; font-size: 14px; line-height: 1.7; }
+.cbr-preview-title { color: var(--cbr-primary); font-weight: 700; font-size: 20px; margin-bottom: 6px; }
+.cbr-preview-body sup { color: var(--cbr-accent); font-weight: 700; font-size: .7em; margin-right: 2px; }
+.cbr-preview-btn { display: inline-block; margin-top: 8px; padding: 6px 14px; border-radius: 5px; background: var(--cbr-primary); color: #fff; font-weight: 600; font-size: 12px; }
+
+.cbr-progress { height: 14px; background: #e5e7eb; border-radius: 7px; overflow: hidden; margin: 8px 0; }
+.cbr-progress-bar { height: 100%; background: #2271b1; transition: width .4s; }
+
+.cbr-font-samples { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 8px; }
+.cbr-font-sample { background: #fff; border: 1px solid #dcdcde; border-radius: 6px; padding: 10px 12px; }
+.cbr-font-sample-text { display: block; font-size: 16px; line-height: 1.4; }
+.cbr-font-sample-name { display: block; margin-top: 4px; font: 11px/1.3 -apple-system, Arial, sans-serif; color: #666; }
+
+/* ===== Settings page layout ===== */
+.cbr-settings { max-width: 1120px; }
+.cbr-page-head { margin: 8px 0 18px; }
+.cbr-page-head h1 { font-size: 24px; font-weight: 600; margin: 0 0 4px; padding: 0; }
+.cbr-page-head h1 span { font-weight: 400; color: #646970; }
+.cbr-page-sub { margin: 0; color: #646970; font-size: 13px; }
+.cbr-page-sub code { font-size: 12px; padding: 2px 6px; }
+
+.cbr-tabs { display: flex; gap: 4px; border-bottom: 1px solid #c3c4c7; margin: 0 0 -1px; }
+.cbr-tab { display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; margin-bottom: -1px; border: 1px solid transparent; border-bottom: none; border-radius: 6px 6px 0 0; color: #50575e; text-decoration: none; font-size: 14px; font-weight: 500; }
+.cbr-tab .dashicons { font-size: 16px; width: 16px; height: 16px; }
+.cbr-tab:hover { color: #1d2327; background: #f0f0f1; }
+.cbr-tab.is-active { background: #fff; border-color: #c3c4c7; color: #1d2327; }
+.cbr-tab:focus { box-shadow: none; outline: 2px solid #2271b1; outline-offset: -2px; }
+
+.cbr-tab-panel { display: none; border-radius: 0 8px 8px 8px; padding: 0; }
+.cbr-tab-panel.is-active { display: block; }
+.cbr-card-head { padding: 18px 24px 14px; border-bottom: 1px solid #f0f0f1; }
+.cbr-card-head h3 { margin: 0 0 4px; font-size: 17px; }
+.cbr-card-head p { margin: 0; color: #646970; }
+.cbr-tab-panel > .form-table, .cbr-tab-panel > .cbr-theme-palette, .cbr-tab-panel > p, .cbr-tab-panel > h4 { margin-left: 24px; margin-right: 24px; }
+.cbr-tab-panel > .form-table { width: auto; }
+.cbr-tab-panel .form-table th { width: 200px; padding: 16px 16px 16px 0; white-space: nowrap; vertical-align: top; }
+.cbr-tab-panel .form-table th .description { white-space: normal; display: block; }
+.cbr-tab-panel .form-table td { padding: 14px 0; }
+.cbr-tab-panel .form-table select, .cbr-tab-panel .form-table input[type=number], .cbr-tab-panel .form-table input[type=text].regular-text { min-height: 34px; }
+.cbr-tab-panel .form-table input[type=number] { width: 90px; }
+.cbr-tab-panel .form-table select { min-width: 220px; max-width: 100%; }
+.cbr-tab-panel .description { color: #646970; }
+.cbr-theme-palette { margin: 18px 24px 6px; }
+
+/* Colors: fields left, preview right */
+.cbr-two-col { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 0 32px; padding: 0 24px 20px; }
+.cbr-two-col .cbr-col-main .form-table, .cbr-two-col .cbr-col-main .cbr-theme-palette { margin-left: 0; margin-right: 0; }
+.cbr-col-side { position: sticky; top: 52px; align-self: start; padding-top: 18px; }
+.cbr-col-side h4 { margin: 0 0 8px; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: #646970; }
+@media (max-width: 1100px) { .cbr-two-col { grid-template-columns: 1fr; } .cbr-col-side { position: static; } }
+
+/* Fonts panel spacing */
+#cbr-tab-fonts .form-table { margin-bottom: 20px; }
+
+/* Sticky save bar */
+.cbr-save-bar { position: sticky; bottom: 0; display: flex; align-items: center; gap: 16px; margin-top: 16px; padding: 12px 20px; background: #fff; border: 1px solid #c3c4c7; border-radius: 8px; box-shadow: 0 -2px 10px rgba(0,0,0,.05); z-index: 5; }
+.cbr-save-bar .button { margin: 0; }

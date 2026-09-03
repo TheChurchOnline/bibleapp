@@ -1,0 +1,2 @@
+# Keep the bundled verse data as a binary blob (no line-ending conversion)
+data/verses.tsv.gz binary

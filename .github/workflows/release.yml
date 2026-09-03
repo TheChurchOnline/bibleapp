@@ -1,0 +1,41 @@
+# Builds the plugin zip and attaches it to the GitHub Release whenever a version tag is pushed.
+#
+#   git tag v1.8.1
+#   git push origin v1.8.1
+#
+# The zip contains a single top-level folder "the-church-online-bible-reader/", which is
+# what WordPress needs so the update replaces the existing plugin folder in place.
+name: Release plugin zip
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify tag matches plugin version
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          VER=$(grep -m1 -E '^\s*\*\s*Version:' the-church-online-bible-reader.php | sed -E 's/.*Version:\s*//' | tr -d '\r')
+          echo "tag=$TAG plugin=$VER"
+          [ "$TAG" = "$VER" ] || { echo "::error::Tag v$TAG does not match plugin header Version: $VER"; exit 1; }
+
+      - name: Build zip
+        run: |
+          mkdir -p build/the-church-online-bible-reader
+          rsync -a --exclude='.git' --exclude='.github' --exclude='build' --exclude='.DS_Store' --exclude='*.md' ./ build/the-church-online-bible-reader/
+          cd build && zip -rq ../the-church-online-bible-reader.zip the-church-online-bible-reader
+          ls -lh ../the-church-online-bible-reader.zip
+
+      - name: Create release and attach zip
+        uses: softprops/action-gh-release@v2
+        with:
+          files: the-church-online-bible-reader.zip
+          generate_release_notes: true
