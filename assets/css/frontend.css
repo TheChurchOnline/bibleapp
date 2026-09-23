@@ -248,13 +248,26 @@
 
 .cbr-empty { text-align: center; padding: 40px 0; opacity: 0.6; }
 
+/* Chapter footer: filled buttons on a tinted band, visually a different level from the verse pager */
+.cbr-bottom-nav { background: var(--cbr-hover); }
+.cbr-btn-chapter { background: var(--cbr-primary); color: #fff; border-color: var(--cbr-primary); }
+.cbr-btn-chapter:hover { filter: brightness(1.12); background: var(--cbr-primary); color: #fff; }
+.cbr-btn-chapter:disabled { opacity: 0.35; filter: none; }
+.cbr-dark .cbr-btn-chapter { background: var(--cbr-secondary); border-color: var(--cbr-secondary); color: #1a1a2e; }
+.cbr-page-info { font-size: 13px; }
+
+/* Verse pager: outlined, lighter */
+.cbr-btn-page { padding: 7px 14px; border: 1px solid var(--cbr-border); border-radius: 6px; font-size: 0.85em; color: var(--cbr-text); background: transparent; }
+.cbr-btn-page:hover { border-color: var(--cbr-primary); color: var(--cbr-primary); background: transparent; }
+.cbr-btn-page:disabled { opacity: 0.35; cursor: default; }
+.cbr-btn-page:disabled:hover { border-color: var(--cbr-border); color: var(--cbr-text); }
+.cbr-dark .cbr-btn-page:hover { border-color: var(--cbr-secondary); color: var(--cbr-secondary); }
+
 /* Paginate mode */
 .cbr-pager { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 22px; padding-top: 14px; border-top: 1px solid var(--cbr-border); }
 .cbr-pager-info { font-family: var(--cbr-heading-font); font-size: 0.8em; opacity: 0.75; text-align: center; }
 .cbr-pager-page { opacity: 0.7; }
-.cbr-pager .cbr-btn-nav:disabled { opacity: 0.35; cursor: default; }
-.cbr-pager .cbr-btn-nav:disabled:hover { background: transparent; color: var(--cbr-primary); }
-@media (max-width: 640px) { .cbr-pager-page { display: none; } }
+@media (max-width: 640px) { .cbr-pager-page { display: none; } .cbr-btn-page, .cbr-btn-chapter { padding-left: 10px; padding-right: 10px; font-size: 0.8em; } }
 
 /* Loading: controls disabled until content arrives */
 .cbr-reader.cbr-busy .cbr-toolbar,

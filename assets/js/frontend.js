@@ -155,6 +155,12 @@
             this.renderPage();
         },
 
+        /** Restore pager button disabled-state after a busy cycle re-enabled everything. */
+        syncPagerButtons: function() {
+            $('.cbr-page-prev').prop('disabled', this.page === 1 && this.chapterId <= 1);
+            $('.cbr-page-next').prop('disabled', this.page === this.pageCount && this.chapterId >= this.totalChapters);
+        },
+
         /** Re-render the current chapter's page from the cached verse list (no AJAX). */
         renderPage: function() {
             if (this._chapterData) this.renderPassage(this._chapterData);
@@ -168,6 +174,7 @@
             var $r = $('#cbr-bible-reader');
             $r.toggleClass('cbr-busy', !!busy).attr('aria-busy', busy ? 'true' : 'false');
             $r.find('.cbr-select, .cbr-search, .cbr-btn, .cbr-nav-btn, .cbr-book-btn').prop('disabled', !!busy);
+            if (!busy) this.renderPage && this._chapterData && this.isPaginated() && this.syncPagerButtons();
             if (!busy) {
                 // Restore the chapter-boundary state the busy flag just overwrote
                 $('#cbr-prev-chapter, #cbr-prev-chapter-bottom').prop('disabled', this.chapterId <= 1);
@@ -395,10 +402,10 @@
                 var atStart = self.page === 1 && self.chapterId <= 1;
                 var atEnd   = self.page === self.pageCount && self.chapterId >= self.totalChapters;
                 html += '<nav class="cbr-pager" aria-label="Verse pages">'
-                      + '<button type="button" class="cbr-btn cbr-btn-nav cbr-page-prev"' + (atStart ? ' disabled' : '') + '>\u2190 Previous</button>'
+                      + '<button type="button" class="cbr-btn cbr-btn-page cbr-page-prev" aria-label="Previous verses"' + (atStart ? ' disabled' : '') + '>\u2190 Previous verses</button>'
                       + '<span class="cbr-pager-info">Verses ' + pageFirst + '\u2013' + pageLast + ' of ' + total
-                      + ' <span class="cbr-pager-page">(page ' + self.page + ' of ' + self.pageCount + ')</span></span>'
-                      + '<button type="button" class="cbr-btn cbr-btn-nav cbr-page-next"' + (atEnd ? ' disabled' : '') + '>Next \u2192</button>'
+                      + '<span class="cbr-pager-page"> \u00b7 Page ' + self.page + ' of ' + self.pageCount + '</span></span>'
+                      + '<button type="button" class="cbr-btn cbr-btn-page cbr-page-next" aria-label="Next verses"' + (atEnd ? ' disabled' : '') + '>Next verses \u2192</button>'
                       + '</nav>';
             } else {
                 d.verses.forEach(function(v) { html += verseHtml(v); });

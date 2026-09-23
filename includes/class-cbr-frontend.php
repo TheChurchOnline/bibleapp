@@ -208,9 +208,9 @@ class CBR_Frontend {
 
             <!-- Bottom Nav -->
             <div class="cbr-bottom-nav">
-                <button id="cbr-prev-chapter-bottom" class="cbr-btn cbr-btn-nav">← Previous</button>
+                <button id="cbr-prev-chapter-bottom" class="cbr-btn cbr-btn-nav cbr-btn-chapter" aria-label="Previous chapter">← Previous chapter</button>
                 <span id="cbr-page-info" class="cbr-page-info"></span>
-                <button id="cbr-next-chapter-bottom" class="cbr-btn cbr-btn-nav">Next →</button>
+                <button id="cbr-next-chapter-bottom" class="cbr-btn cbr-btn-nav cbr-btn-chapter" aria-label="Next chapter">Next chapter →</button>
             </div>
         </div>
         <?php
