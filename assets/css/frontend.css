@@ -248,6 +248,14 @@
 
 .cbr-empty { text-align: center; padding: 40px 0; opacity: 0.6; }
 
+/* Paginate mode */
+.cbr-pager { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 22px; padding-top: 14px; border-top: 1px solid var(--cbr-border); }
+.cbr-pager-info { font-family: var(--cbr-heading-font); font-size: 0.8em; opacity: 0.75; text-align: center; }
+.cbr-pager-page { opacity: 0.7; }
+.cbr-pager .cbr-btn-nav:disabled { opacity: 0.35; cursor: default; }
+.cbr-pager .cbr-btn-nav:disabled:hover { background: transparent; color: var(--cbr-primary); }
+@media (max-width: 640px) { .cbr-pager-page { display: none; } }
+
 /* Loading: controls disabled until content arrives */
 .cbr-reader.cbr-busy .cbr-toolbar,
 .cbr-reader.cbr-busy .cbr-chapter-header,

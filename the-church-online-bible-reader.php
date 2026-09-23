@@ -3,7 +3,7 @@
  * Plugin Name: The Church Online Bible Reader
  * Plugin URI: https://thechurchonline.com
  * Description: A modern, customizable Bible reader with 6 translations (NIV, KJV, NKJV, NLT, YLT, GNT), full-text search, AJAX navigation, and fully themeable fonts. Use shortcode [church_bible] to embed anywhere. All 185,000+ verses are bundled and auto-imported on activation.
- * Version: 1.8.1
+ * Version: 1.9.1
  * Author: The Church Online
  * License: GPL v2 or later
  * Text Domain: the-church-online-bible-reader
@@ -14,7 +14,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'CBR_VERSION', '1.8.1' );
+define( 'CBR_VERSION', '1.9.1' );
 
 // GitHub repo used for update checks ("owner/repo"). Must match the Update URI header above.
 if ( ! defined( 'CBR_GITHUB_REPO' ) ) define( 'CBR_GITHUB_REPO', 'TheChurchOnline/bibleapp' );
@@ -174,9 +174,9 @@ class Church_Bible_Reader {
             'cbr_body_font_custom'  => '',
             'cbr_verse_font_size'   => '18',
             'cbr_reader_height'     => '600',
-            'cbr_length_mode'       => 'scroll',
+            'cbr_length_mode'       => 'paginate',
             'cbr_preview_verses'    => '15',
-            'cbr_verses_per_page'   => '0',
+            'cbr_verses_per_page'   => '7',
             'cbr_show_verse_nums'   => '1',
             'cbr_enable_search'     => '1',
             'cbr_enable_dark_mode'  => '1',

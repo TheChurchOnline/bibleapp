@@ -123,7 +123,8 @@ class CBR_Admin {
                         <tr><td><code>text_color</code></td><td>Verse text</td></tr>
                         <tr><td><code>heading_font</code> / <code>body_font</code></td><td>Any Google Fonts family</td></tr>
                         <tr><td><code>font_size</code></td><td>Base verse size in px</td></tr>
-                        <tr><td><code>mode</code></td><td><code>scroll</code>, <code>expand</code> (Continue reading), or <code>full</code></td></tr>
+                        <tr><td><code>mode</code></td><td><code>paginate</code>, <code>scroll</code>, <code>expand</code> (Continue reading), or <code>full</code></td></tr>
+                        <tr><td><code>per_page</code></td><td>Verses per page (paginate mode, default 7)</td></tr>
                         <tr><td><code>height</code></td><td>Scroll box height in px (scroll mode)</td></tr>
                         <tr><td><code>preview</code></td><td>Verses shown before "Continue reading" (expand mode)</td></tr>
                     </tbody>
@@ -207,13 +208,21 @@ class CBR_Admin {
                             <tr>
                                 <th>Long Chapters</th>
                                 <td>
-                                    <?php $mode = get_option( 'cbr_length_mode', 'scroll' ); ?>
+                                    <?php $mode = get_option( 'cbr_length_mode', 'paginate' ); ?>
                                     <select name="cbr_length_mode" id="cbr_length_mode">
+                                        <option value="paginate" <?php selected( $mode, 'paginate' ); ?>>Paginate — a few verses per page with Prev / Next</option>
                                         <option value="scroll" <?php selected( $mode, 'scroll' ); ?>>Scroll box — fixed height, scrolls inside the reader</option>
                                         <option value="expand" <?php selected( $mode, 'expand' ); ?>>Continue reading — short preview, one click expands the chapter</option>
                                         <option value="full"   <?php selected( $mode, 'full' ); ?>>Full — show the whole chapter, page grows</option>
                                     </select>
-                                    <p class="description">Override per page with <code>[church_bible mode="expand"]</code>.</p>
+                                    <p class="description">Override per page with <code>[church_bible mode="scroll"]</code>, <code>mode="expand"</code>, or <code>mode="full"</code>.</p>
+                                </td>
+                            </tr>
+                            <tr class="cbr-mode-row cbr-mode-paginate">
+                                <th>Verses per Page</th>
+                                <td>
+                                    <input type="number" name="cbr_verses_per_page" value="<?php echo esc_attr( get_option('cbr_verses_per_page', 7) ); ?>" min="1" max="200" />
+                                    <p class="description">Override with <code>per_page="10"</code>.</p>
                                 </td>
                             </tr>
                             <tr class="cbr-mode-row cbr-mode-scroll">

@@ -30,8 +30,9 @@ class CBR_Frontend {
             'layout'  => get_option( 'cbr_layout_style', 'classic' ),
             'dark'    => '0',
             'height'  => get_option( 'cbr_reader_height', '600' ), // px; 0 or "auto" = grow with content
-            'mode'    => get_option( 'cbr_length_mode', 'scroll' ),   // scroll | expand | full
-            'preview' => get_option( 'cbr_preview_verses', '15' ),    // verses shown before "Continue reading" (expand mode)
+            'mode'     => get_option( 'cbr_length_mode', 'paginate' ), // paginate | scroll | expand | full
+            'preview'  => get_option( 'cbr_preview_verses', '15' ),    // verses shown before "Continue reading" (expand mode)
+            'per_page' => get_option( 'cbr_verses_per_page', '7' ),    // verses per page (paginate mode)
             // Per-shortcode theme overrides (blank = use site-wide settings)
             'theme'        => '',   // preset slug, e.g. theme="navy"
             'primary'      => '',
@@ -46,10 +47,13 @@ class CBR_Frontend {
 
         // Reader height: numeric px value, or 0/auto for no cap
         $mode = strtolower( trim( (string) $atts['mode'] ) );
-        if ( ! in_array( $mode, [ 'scroll', 'expand', 'full' ], true ) ) $mode = 'scroll';
+        if ( ! in_array( $mode, [ 'paginate', 'scroll', 'expand', 'full' ], true ) ) $mode = 'paginate';
 
         $height_px = ( strtolower( trim( (string) $atts['height'] ) ) === 'auto' ) ? 0 : absint( $atts['height'] );
         if ( $mode !== 'scroll' ) $height_px = 0; // height cap only applies in scroll mode
+
+        $per_page = absint( $atts['per_page'] );
+        if ( $per_page < 1 || $per_page > 200 ) $per_page = 7;
 
         $preview_verses = absint( $atts['preview'] );
         if ( $preview_verses < 3 ) $preview_verses = 15;
@@ -85,6 +89,7 @@ class CBR_Frontend {
             'layout'        => sanitize_text_field( $atts['layout'] ),
             'lengthMode'    => $mode,
             'previewVerses' => $preview_verses,
+            'perPage'       => $per_page,
         ]);
 
         // CSS custom properties from admin settings

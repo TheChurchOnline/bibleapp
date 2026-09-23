@@ -15,6 +15,10 @@
         // Current verse range being displayed (0 = full chapter)
         verseStart: 0,
         verseEnd: 0,
+        // Paginate mode
+        page: 1,
+        pageCount: 1,
+        pendingLastPage: false, // when going backwards into the previous chapter
 
         init: function() {
             this.versionId = parseInt(cbrData.defaultVersion) || 3;
@@ -47,6 +51,7 @@
             $('#cbr-book-select').on('change', function() {
                 self.bookId = parseInt($(this).val());
                 self.chapterId = 1;
+                self.page = 1;
                 self.clearRange();
                 self.populateChapterSelect();
                 self.loadChapter();
@@ -54,6 +59,7 @@
 
             $('#cbr-chapter-select').on('change', function() {
                 self.chapterId = parseInt($(this).val());
+                self.page = 1;
                 self.clearRange();
                 self.loadChapter();
             });
@@ -91,12 +97,18 @@
                 $(this).closest('.cbr-continue-wrap').remove();
             });
 
-            // "View full chapter" link (rendered dynamically)
+            // "View full chapter" link: in paginate mode, open the page that contains the verse
             $('#cbr-content').on('click', '.cbr-view-full-chapter', function(e) {
                 e.preventDefault();
+                var v = self.verseStart;
                 self.clearRange();
+                self.page = (self.isPaginated() && v > 0) ? Math.ceil(v / self.perPage()) : 1;
                 self.loadChapter();
             });
+
+            // Pager (paginate mode)
+            $('#cbr-content').on('click', '.cbr-page-prev', function() { self.gotoPage(self.page - 1); });
+            $('#cbr-content').on('click', '.cbr-page-next', function() { self.gotoPage(self.page + 1); });
 
             // Reset to the page's default reference
             $('#cbr-reset').on('click', function() { self.resetToDefault(); });
@@ -113,12 +125,40 @@
 
             $(document).on('keydown', function(e) {
                 if ($(e.target).is('input, select, textarea')) return;
+                if (self.isPaginated() && self.pageCount > 1) {
+                    if (e.key === 'ArrowLeft')  self.gotoPage(self.page - 1);
+                    if (e.key === 'ArrowRight') self.gotoPage(self.page + 1);
+                    return;
+                }
                 if (e.key === 'ArrowLeft')  self.prevChapter();
                 if (e.key === 'ArrowRight') self.nextChapter();
             });
         },
 
         clearRange: function() { this.verseStart = 0; this.verseEnd = 0; },
+
+        isPaginated: function() { return cbrData.lengthMode === 'paginate'; },
+        perPage: function() { return Math.max(1, parseInt(cbrData.perPage) || 7); },
+
+        /** Move within the paginated chapter; crosses chapter boundaries at either end. */
+        gotoPage: function(n) {
+            if (!this.isPaginated()) return;
+            if (n < 1) {
+                if (this.chapterId > 1) { this.pendingLastPage = true; this.prevChapter(); }
+                return;
+            }
+            if (n > this.pageCount) {
+                if (this.chapterId < this.totalChapters) { this.page = 1; this.nextChapter(); }
+                return;
+            }
+            this.page = n;
+            this.renderPage();
+        },
+
+        /** Re-render the current chapter's page from the cached verse list (no AJAX). */
+        renderPage: function() {
+            if (this._chapterData) this.renderPassage(this._chapterData);
+        },
 
         /**
          * Disable every control while content is loading; re-enable when done.
@@ -152,6 +192,11 @@
 
             var chapter = parseInt(parts[1]) || 1;
             var vs = 0, ve = 0;
+            this.page = 1;
+            if (parts[2] && /^p\d+$/i.test(parts[2])) {
+                this.page = parseInt(parts[2].substring(1)) || 1;
+                parts[2] = null;
+            }
             if (parts[2]) {
                 var vr = parts[2].split(/[-\u2013\u2014]/);
                 vs = parseInt(vr[0]) || 0;
@@ -185,6 +230,7 @@
             this.versionId = parseInt(cbrData.defaultVersion) || 3;
             this.bookId    = parseInt(cbrData.defaultBook) || 1;
             this.chapterId = parseInt(cbrData.defaultChapter) || 1;
+            this.page = 1;
             this.clearRange();
             $('#cbr-version-select').val(this.versionId);
             $('#cbr-book-select').val(this.bookId);
@@ -270,6 +316,18 @@
             self.verseEnd      = parseInt(d.verse_end) || 0;
 
             var isPartial = !!d.is_partial && self.verseStart > 0;
+            self._chapterData = d;
+
+            // Paginate mode: slice the chapter into pages of perPage verses
+            var paginate = self.isPaginated() && !isPartial && d.verses && d.verses.length > self.perPage();
+            if (paginate) {
+                self.pageCount = Math.ceil(d.verses.length / self.perPage());
+                if (self.pendingLastPage) { self.page = self.pageCount; self.pendingLastPage = false; }
+                if (self.page < 1) self.page = 1;
+                if (self.page > self.pageCount) self.page = self.pageCount;
+            } else {
+                self.page = 1; self.pageCount = 1; self.pendingLastPage = false;
+            }
 
             // Title: "Genesis 8" or "Genesis 8:15" or "Genesis 8:15–20"
             var title = d.book_name + ' ' + d.chapter_id;
@@ -304,6 +362,15 @@
                 return out;
             }
 
+            var pageVerses = d.verses || [];
+            var pageFirst = 0, pageLast = 0;
+            if (paginate) {
+                var startIdx = (self.page - 1) * self.perPage();
+                pageVerses = d.verses.slice(startIdx, startIdx + self.perPage());
+                pageFirst = parseInt(pageVerses[0].verse_id);
+                pageLast  = parseInt(pageVerses[pageVerses.length - 1].verse_id);
+            }
+
             if (!total && d.importing) {
                 var pct = d.importing.percent || 0;
                 html = '<div class="cbr-empty cbr-importing">Bible data is still loading (' + pct + '%)&hellip;<br>'
@@ -323,6 +390,16 @@
                       + '<button type="button" class="cbr-btn cbr-btn-nav cbr-continue-btn">Continue reading '
                       + '<span class="cbr-continue-count">(' + (total - previewN) + ' more verses)</span></button>'
                       + '</div>';
+            } else if (paginate) {
+                pageVerses.forEach(function(v) { html += verseHtml(v); });
+                var atStart = self.page === 1 && self.chapterId <= 1;
+                var atEnd   = self.page === self.pageCount && self.chapterId >= self.totalChapters;
+                html += '<nav class="cbr-pager" aria-label="Verse pages">'
+                      + '<button type="button" class="cbr-btn cbr-btn-nav cbr-page-prev"' + (atStart ? ' disabled' : '') + '>\u2190 Previous</button>'
+                      + '<span class="cbr-pager-info">Verses ' + pageFirst + '\u2013' + pageLast + ' of ' + total
+                      + ' <span class="cbr-pager-page">(page ' + self.page + ' of ' + self.pageCount + ')</span></span>'
+                      + '<button type="button" class="cbr-btn cbr-btn-nav cbr-page-next"' + (atEnd ? ' disabled' : '') + '>Next \u2192</button>'
+                      + '</nav>';
             } else {
                 d.verses.forEach(function(v) { html += verseHtml(v); });
             }
@@ -351,6 +428,7 @@
             if (history.replaceState) {
                 var hash = '#' + d.book_name.replace(/\s+/g, '+') + '.' + d.chapter_id;
                 if (isPartial) hash += '.' + self.verseStart + (self.verseEnd > self.verseStart ? '-' + self.verseEnd : '');
+                else if (paginate && self.page > 1) hash += '.p' + self.page;
                 if (window.location.hash !== hash) {
                     self._settingHash = true;
                     history.replaceState(null, null, hash);
@@ -363,6 +441,7 @@
             if (this.chapterId > 1) {
                 this.chapterId--;
                 this.clearRange();
+                if (!this.pendingLastPage) this.page = 1;
                 this.populateChapterSelect();
                 this.loadChapter();
             }
@@ -372,6 +451,7 @@
             if (this.chapterId < this.totalChapters) {
                 this.chapterId++;
                 this.clearRange();
+                this.page = 1;
                 this.populateChapterSelect();
                 this.loadChapter();
             }
@@ -448,6 +528,7 @@
             $('.cbr-book-btn').on('click', function() {
                 self.bookId = parseInt($(this).data('book-id'));
                 self.chapterId = 1;
+                self.page = 1;
                 self.clearRange();
                 $('#cbr-book-select').val(self.bookId);
                 self.populateChapterSelect();
