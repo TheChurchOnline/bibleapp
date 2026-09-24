@@ -163,7 +163,28 @@
 
         /** Re-render the current chapter's page from the cached verse list (no AJAX). */
         renderPage: function() {
-            if (this._chapterData) this.renderPassage(this._chapterData);
+            if (!this._chapterData) return;
+            this.renderPassage(this._chapterData);
+            this.forceRepaint();
+            // Bring the top of the new page into view if the pager was tapped from the bottom
+            var reader = document.getElementById('cbr-bible-reader');
+            if (reader && reader.getBoundingClientRect().top < -40) {
+                reader.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        },
+
+        /**
+         * iOS Safari can leave a strip of the previous (taller) page painted on screen
+         * after the content block shrinks. Forcing a reflow on the next frame clears it.
+         */
+        forceRepaint: function() {
+            var el = document.getElementById('cbr-content');
+            if (!el) return;
+            window.requestAnimationFrame(function() {
+                el.style.transform = 'translateZ(0)';
+                void el.offsetHeight;
+                el.style.transform = '';
+            });
         },
 
         /**

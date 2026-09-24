@@ -4,7 +4,7 @@ Tags: bible, scripture, church, reader, kjv, niv, nlt
 Requires at least: 5.6
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 1.9.2
+Stable tag: 1.9.3
 License: GPLv2 or later
 
 A modern, customizable Bible reader plugin with 6 translations, full-text search, AJAX navigation, and fully themeable fonts.
@@ -44,6 +44,11 @@ With options:
 `[church_bible dark="1"]` — Dark mode by default
 
 == Changelog ==
+
+= 1.9.3 =
+* Mitigation for an iOS Safari repaint glitch where a line from the previous page could remain visible after paging back (content block now gets its own compositing layer and is reflowed after each page change)
+* Paging from the bottom pager scrolls the new page's top into view
+
 
 = 1.9.2 =
 * Verse pager and chapter navigation are now visually distinct: "Previous/Next verses" (outlined) under the verses, "Previous/Next chapter" (filled, tinted footer) below
