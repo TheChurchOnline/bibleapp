@@ -256,6 +256,8 @@
 .cbr-dark .cbr-btn-chapter { background: var(--cbr-secondary); border-color: var(--cbr-secondary); color: #1a1a2e; }
 .cbr-page-info { font-size: 13px; }
 
+.cbr-btn-nav, .cbr-btn-page, .cbr-btn-chapter { white-space: nowrap; }
+
 /* Verse pager: outlined, lighter */
 .cbr-btn-page { padding: 7px 14px; border: 1px solid var(--cbr-border); border-radius: 6px; font-size: 0.85em; color: var(--cbr-text); background: transparent; }
 .cbr-btn-page:hover { border-color: var(--cbr-primary); color: var(--cbr-primary); background: transparent; }
@@ -269,7 +271,7 @@
 .cbr-pager { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 22px; padding-top: 14px; border-top: 1px solid var(--cbr-border); }
 .cbr-pager-info { font-family: var(--cbr-heading-font); font-size: 0.8em; opacity: 0.75; text-align: center; }
 .cbr-pager-page { opacity: 0.7; }
-@media (max-width: 640px) { .cbr-pager-page { display: none; } .cbr-btn-page, .cbr-btn-chapter { padding-left: 10px; padding-right: 10px; font-size: 0.8em; } }
+}
 
 /* Loading: controls disabled until content arrives */
 .cbr-reader.cbr-busy .cbr-toolbar,
@@ -451,3 +453,24 @@
     .cbr-reader { box-shadow: none; border: none; }
     .cbr-content { font-size: 12pt; }
 }
+
+/* Phones: label on its own line, then two equal-width buttons */
+@media (max-width: 640px) {
+    .cbr-pager, .cbr-bottom-nav {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas: "info info" "prev next";
+        gap: 10px 10px;
+        align-items: stretch;
+    }
+    .cbr-pager-info, .cbr-page-info { grid-area: info; text-align: center; font-size: 13px; white-space: nowrap; }
+    .cbr-pager-page { display: inline; }
+    .cbr-page-prev, #cbr-prev-chapter-bottom { grid-area: prev; }
+    .cbr-page-next, #cbr-next-chapter-bottom { grid-area: next; }
+    .cbr-btn-page, .cbr-btn-chapter {
+        width: 100%;
+        padding: 11px 8px;
+        font-size: 14px;
+        text-align: center;
+    }
+    .cbr-bottom-nav { padding: 14px 16px; }
